@@ -1,0 +1,101 @@
+{
+  "kind": "collectionType",
+  "collectionName": "lawyers",
+  "info": {
+    "singularName": "lawyer",
+    "pluralName": "lawyers",
+    "displayName": "Lawyer",
+    "description": "Lawyer profile, contacts and availability schedule"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "title": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "location": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "language": {
+      "type": "string"
+    },
+    "specializations": {
+      "type": "json"
+    },
+    "casesCount": {
+      "type": "integer",
+      "default": 0,
+      "min": 0
+    },
+    "experienceYears": {
+      "type": "integer",
+      "default": 0,
+      "min": 0
+    },
+    "isTopLawyer": {
+      "type": "boolean",
+      "default": false
+    },
+    "officePhone": {
+      "type": "string"
+    },
+    "contactEmail": {
+      "type": "email"
+    },
+    "whatsapp": {
+      "type": "string"
+    },
+    "consultationPriceAed": {
+      "type": "integer",
+      "default": 0,
+      "min": 0
+    },
+    "about": {
+      "type": "richtext",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "education": {
+      "type": "json"
+    },
+    "notableCases": {
+      "type": "json"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true,
+      "required": true
+    },
+    "slotDurationMin": {
+      "type": "integer",
+      "default": 60,
+      "min": 15
+    },
+    "weeklyHours": {
+      "type": "component",
+      "repeatable": true,
+      "component": "schedule.working-day"
+    },
+    "timeOff": {
+      "type": "component",
+      "repeatable": true,
+      "component": "schedule.time-off"
+    }
+  }
+}

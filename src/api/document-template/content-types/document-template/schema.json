@@ -1,0 +1,80 @@
+{
+  "kind": "collectionType",
+  "collectionName": "document_templates",
+  "info": {
+    "singularName": "document-template",
+    "pluralName": "document-templates",
+    "displayName": "Document Template",
+    "description": "Document type: form fields + generation endpoint"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "slug": {
+      "type": "uid",
+      "required": true
+    },
+    "title": {
+      "type": "string",
+      "required": true,
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "description": {
+      "type": "text",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "category": {
+      "type": "string"
+    },
+    "iconKey": {
+      "type": "enumeration",
+      "enum": [
+        "fileText",
+        "scale",
+        "handshake",
+        "scrollText",
+        "badgeCheck",
+        "copy",
+        "file"
+      ],
+      "default": "fileText",
+      "required": true
+    },
+    "active": {
+      "type": "boolean",
+      "default": true,
+      "required": true
+    },
+    "order": {
+      "type": "integer",
+      "default": 0
+    },
+    "generationUrl": {
+      "type": "string"
+    },
+    "generationMethod": {
+      "type": "enumeration",
+      "enum": ["POST", "GET"],
+      "default": "POST",
+      "required": true
+    },
+    "generationPayloadTemplate": {
+      "type": "json"
+    },
+    "promptTemplate": {
+      "type": "text",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "fields": {
+      "type": "component",
+      "repeatable": true,
+      "component": "doc.field"
+    }
+  }
+}

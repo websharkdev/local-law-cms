@@ -1,0 +1,38 @@
+{
+  "kind": "collectionType",
+  "collectionName": "legal_categories",
+  "info": {
+    "singularName": "legal-category",
+    "pluralName": "legal-categories",
+    "displayName": "Legal Category",
+    "description": "Practice areas used for lawyer specializations and consultation requests"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "slug": {
+      "type": "uid",
+      "required": true
+    },
+    "title": {
+      "type": "string",
+      "required": true,
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "order": {
+      "type": "integer",
+      "default": 0
+    },
+    "active": {
+      "type": "boolean",
+      "default": true,
+      "required": true
+    }
+  }
+}

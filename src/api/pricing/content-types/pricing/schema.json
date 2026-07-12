@@ -1,0 +1,26 @@
+{
+  "kind": "singleType",
+  "collectionName": "pricings",
+  "info": {
+    "singularName": "pricing",
+    "pluralName": "pricings",
+    "displayName": "Pricing",
+    "description": "Service prices used by the app when charging customers"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "translationRatePerPageAed": {
+      "type": "integer",
+      "required": true,
+      "default": 50,
+      "min": 1
+    },
+    "currency": {
+      "type": "string",
+      "default": "AED",
+      "required": true
+    }
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "kind": "collectionType",
+  "collectionName": "notary_services",
+  "info": {
+    "singularName": "notary-service",
+    "pluralName": "notary-services",
+    "displayName": "Notary Service",
+    "description": "Services available for notary booking"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "slug": {
+      "type": "uid",
+      "required": true
+    },
+    "title": {
+      "type": "string",
+      "required": true,
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "description": {
+      "type": "text",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "iconKey": {
+      "type": "enumeration",
+      "enum": [
+        "documentAttestation",
+        "powerOfAttorney",
+        "contractNotarization",
+        "authentification",
+        "affidavit",
+        "other"
+      ],
+      "default": "other",
+      "required": true
+    },
+    "priceAed": {
+      "type": "integer",
+      "min": 0
+    },
+    "active": {
+      "type": "boolean",
+      "default": true,
+      "required": true
+    },
+    "order": {
+      "type": "integer",
+      "default": 0
+    }
+  }
+}

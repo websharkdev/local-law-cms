@@ -1,0 +1,62 @@
+{
+  "collectionName": "components_doc_fields",
+  "info": {
+    "displayName": "Form Field",
+    "icon": "pencil",
+    "description": "One input field of a document generation form"
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "regex": "^[a-z][a-z0-9_]*$"
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "text",
+        "textarea",
+        "date",
+        "select",
+        "radio",
+        "checkbox",
+        "number",
+        "email",
+        "phone"
+      ],
+      "required": true,
+      "default": "text"
+    },
+    "label": {
+      "type": "string",
+      "required": true
+    },
+    "labelAr": {
+      "type": "string"
+    },
+    "placeholder": {
+      "type": "string"
+    },
+    "placeholderAr": {
+      "type": "string"
+    },
+    "required": {
+      "type": "boolean",
+      "default": false
+    },
+    "options": {
+      "type": "json"
+    },
+    "section": {
+      "type": "string"
+    },
+    "sectionAr": {
+      "type": "string"
+    },
+    "fullWidth": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

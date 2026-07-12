@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_schedule_time_offs",
+  "info": {
+    "displayName": "Time Off",
+    "icon": "sun",
+    "description": "Vacation, sick leave or a day off"
+  },
+  "options": {},
+  "attributes": {
+    "type": {
+      "type": "enumeration",
+      "enum": ["vacation", "sick", "dayOff"],
+      "required": true,
+      "default": "dayOff"
+    },
+    "startDate": {
+      "type": "date",
+      "required": true
+    },
+    "endDate": {
+      "type": "date",
+      "required": true
+    },
+    "note": {
+      "type": "string"
+    }
+  }
+}

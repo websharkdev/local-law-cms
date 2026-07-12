@@ -1,0 +1,41 @@
+{
+  "kind": "singleType",
+  "collectionName": "notary_configs",
+  "info": {
+    "singularName": "notary-config",
+    "pluralName": "notary-configs",
+    "displayName": "Notary Config",
+    "description": "Working hours and booking rules for the notary service"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "workingDays": {
+      "type": "component",
+      "repeatable": true,
+      "component": "schedule.working-day"
+    },
+    "slotDurationMin": {
+      "type": "integer",
+      "default": 60,
+      "min": 15,
+      "required": true
+    },
+    "timezone": {
+      "type": "string",
+      "default": "Asia/Dubai",
+      "required": true
+    },
+    "maxDaysAhead": {
+      "type": "integer",
+      "default": 30,
+      "min": 1
+    },
+    "blackoutDates": {
+      "type": "component",
+      "repeatable": true,
+      "component": "schedule.blackout-date"
+    }
+  }
+}

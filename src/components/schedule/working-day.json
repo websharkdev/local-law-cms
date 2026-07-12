@@ -1,0 +1,43 @@
+{
+  "collectionName": "components_schedule_working_days",
+  "info": {
+    "displayName": "Working Day",
+    "icon": "clock",
+    "description": "Working hours for one weekday"
+  },
+  "options": {},
+  "attributes": {
+    "weekday": {
+      "type": "enumeration",
+      "enum": [
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+        "sunday"
+      ],
+      "required": true
+    },
+    "enabled": {
+      "type": "boolean",
+      "default": true,
+      "required": true
+    },
+    "startTime": {
+      "type": "time",
+      "required": true
+    },
+    "endTime": {
+      "type": "time",
+      "required": true
+    },
+    "breakStart": {
+      "type": "time"
+    },
+    "breakEnd": {
+      "type": "time"
+    }
+  }
+}

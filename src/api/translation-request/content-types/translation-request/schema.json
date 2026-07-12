@@ -1,0 +1,58 @@
+{
+  "kind": "collectionType",
+  "collectionName": "translation_requests",
+  "info": {
+    "singularName": "translation-request",
+    "pluralName": "translation-requests",
+    "displayName": "Translation Request",
+    "description": "Legal translation requests submitted from the app"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "userId": {
+      "type": "string",
+      "required": true
+    },
+    "customerName": {
+      "type": "string"
+    },
+    "customerEmail": {
+      "type": "email"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["pending", "inProgress", "completed", "rejected", "cancelled"],
+      "default": "pending",
+      "required": true
+    },
+    "pageCount": {
+      "type": "integer",
+      "required": true,
+      "min": 1
+    },
+    "ratePerPageAed": {
+      "type": "integer",
+      "required": true
+    },
+    "totalAmountAed": {
+      "type": "integer",
+      "required": true
+    },
+    "stripePaymentIntentId": {
+      "type": "string"
+    },
+    "paymentStatus": {
+      "type": "enumeration",
+      "enum": ["pending", "processing", "paid", "failed", "refunded"],
+      "default": "pending",
+      "required": true
+    },
+    "files": {
+      "type": "component",
+      "repeatable": true,
+      "component": "req.file"
+    }
+  }
+}

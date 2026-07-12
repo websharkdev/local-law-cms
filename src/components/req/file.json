@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_req_files",
+  "info": {
+    "displayName": "Request File",
+    "icon": "file",
+    "description": "Metadata of a client-uploaded file stored in the app storage"
+  },
+  "options": {},
+  "attributes": {
+    "fileName": {
+      "type": "string",
+      "required": true
+    },
+    "mimeType": {
+      "type": "string"
+    },
+    "storageKey": {
+      "type": "string",
+      "required": true
+    },
+    "pageCount": {
+      "type": "integer"
+    }
+  }
+}
