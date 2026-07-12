@@ -33,6 +33,27 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Plugin =>
   },
   upload: {
     config: {
+      // Cloudflare R2 (S3-compatible) when credentials are set, local disk otherwise.
+      // R2 has no ACL support — public access goes through AWS_BASE_URL (custom domain / r2.dev).
+      ...(env('AWS_ACCESS_KEY_ID')
+        ? {
+            provider: 'aws-s3',
+            providerOptions: {
+              baseUrl: env('AWS_BASE_URL'),
+              s3Options: {
+                credentials: {
+                  accessKeyId: env('AWS_ACCESS_KEY_ID'),
+                  secretAccessKey: env('AWS_ACCESS_SECRET'),
+                },
+                region: env('AWS_REGION', 'auto'),
+                endpoint: env('AWS_ENDPOINT'),
+                params: {
+                  Bucket: env('AWS_BUCKET'),
+                },
+              },
+            },
+          }
+        : {}),
       security: {
         allowedTypes: allowedMediaTypes,
         deniedTypes: deniedExecutableTypes,

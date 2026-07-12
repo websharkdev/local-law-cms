@@ -1,61 +1,47 @@
-# 🚀 Getting started with Strapi
+# local-law-cms
 
-Strapi comes with a full featured [Command Line Interface](https://docs.strapi.io/dev-docs/cli) (CLI) which lets you scaffold and manage your project in seconds.
+Strapi v5 CMS для сайта local-law. Управляет контентом (юристы, услуги нотариуса, цены, шаблоны документов, настройки сайта); бизнес-данные приложения остаются в Prisma/PostgreSQL local-law.
 
-### `develop`
+## Content types
 
-Start your Strapi application with autoReload enabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-develop)
+| API | Kind | Назначение |
+|---|---|---|
+| `lawyer` | collection | Карточки юристов |
+| `legal-category` | collection | Категории юридических услуг |
+| `notary-service` | collection | Услуги нотариуса |
+| `notary-config` | single | Настройки записи к нотариусу (расписание, blackout-даты) |
+| `holiday` | collection | Праздничные дни |
+| `document-template` | collection | Шаблоны документов (динамические поля) |
+| `translation-request` | collection | Заявки на перевод |
+| `pricing` | single | Страница цен |
+| `site-settings` | single | Глобальные настройки сайта + SEO |
 
-```
-npm run develop
-# or
-yarn develop
-```
+Локали i18n: `en` (default) + `ar` (создаётся автоматически при старте, см. `src/index.ts`).
 
-### `start`
+## Local dev
 
-Start your Strapi application with autoReload disabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-start)
-
-```
-npm run start
-# or
-yarn start
-```
-
-### `build`
-
-Build your admin panel. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-build)
-
-```
-npm run build
-# or
-yarn build
+```bash
+npm install
+cp .env.example .env   # заполнить секреты: openssl rand -base64 32
+npm run develop        # http://localhost:1337/admin
 ```
 
-## ⚙️ Deployment
+Локально используется SQLite (`.tmp/data.db`).
 
-Strapi gives you many possible deployment options for your project including [Strapi Cloud](https://cloud.strapi.io). Browse the [deployment section of the documentation](https://docs.strapi.io/dev-docs/deployment) to find the best solution for your use case.
+## Production
 
+- **База**: Neon PostgreSQL — `DATABASE_CLIENT=postgres`, `DATABASE_URL=...?sslmode=require`, `DATABASE_SSL=true`
+- **Uploads**: Cloudflare R2 — задать `AWS_*` переменные (см. `.env.example`); без них файлы пишутся на локальный диск (на PaaS — ephemeral!)
+- **URL**: `PUBLIC_URL=https://cms.<domain>`, `IS_PROXIED=true` за reverse proxy
+- **CORS**: `LOCAL_LAW_URL=https://<домен Next.js-приложения>`
+
+После деплоя: создать админа на `/admin`, затем Settings → API Tokens → токен для Next.js (используется server-side, public role остаётся закрытой).
+
+## Scripts
+
+```bash
+npm run develop   # dev с autoReload
+npm run build     # production build
+npm run start     # production start
+npm run strapi ts:generate-types   # перегенерировать types/generated после изменения схем
 ```
-yarn strapi deploy
-```
-
-## 📚 Learn more
-
-- [Resource center](https://strapi.io/resource-center) - Strapi resource center.
-- [Strapi documentation](https://docs.strapi.io) - Official Strapi documentation.
-- [Strapi tutorials](https://strapi.io/tutorials) - List of tutorials made by the core team and the community.
-- [Strapi blog](https://strapi.io/blog) - Official Strapi blog containing articles made by the Strapi team and the community.
-- [Changelog](https://strapi.io/changelog) - Find out about the Strapi product updates, new features and general improvements.
-
-Feel free to check out the [Strapi GitHub repository](https://github.com/strapi/strapi). Your feedback and contributions are welcome!
-
-## ✨ Community
-
-- [Discord](https://discord.strapi.io) - Come chat with the Strapi community including the core team.
-- [Forum](https://forum.strapi.io/) - Place to discuss, ask questions and find answers, show your Strapi project and get feedback or just talk with other Community members.
-- [Awesome Strapi](https://github.com/strapi/awesome-strapi) - A curated list of awesome things related to Strapi.
-
----
-
-<sub>🤫 Psst! [Strapi is hiring](https://strapi.io/careers).</sub>
