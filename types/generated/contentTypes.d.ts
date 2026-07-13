@@ -539,6 +539,45 @@ export interface ApiBlogArticleBlogArticle extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiDashboardPromoDashboardPromo
+  extends Struct.SingleTypeSchema {
+  collectionName: "dashboard_promos";
+  info: {
+    description: "Dashboard promotional content \u2014 AI chat chips, help banner, trending questions";
+    displayName: "Dashboard Promo";
+    pluralName: "dashboard-promos";
+    singularName: "dashboard-promo";
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    chatChips: Schema.Attribute.Component<"dashboard.chat-chip", true>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private;
+    helpBanner: Schema.Attribute.Component<"dashboard.help-banner", false>;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      "oneToMany",
+      "api::dashboard-promo.dashboard-promo"
+    >;
+    publishedAt: Schema.Attribute.DateTime;
+    trendingQuestions: Schema.Attribute.Component<
+      "dashboard.trending-question",
+      true
+    >;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiDocumentTemplateDocumentTemplate
   extends Struct.CollectionTypeSchema {
   collectionName: "document_templates";
@@ -1103,44 +1142,6 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface ApiDashboardPromoDashboardPromo extends Struct.SingleTypeSchema {
-  collectionName: "dashboard_promos";
-  info: {
-    description: "Dashboard promotional content \u2014 AI chat chips, help banner, trending questions";
-    displayName: "Dashboard Promo";
-    pluralName: "dashboard-promos";
-    singularName: "dashboard-promo";
-  };
-  options: {
-    draftAndPublish: false;
-  };
-  pluginOptions: {
-    i18n: {
-      localized: true;
-    };
-  };
-  attributes: {
-    chatChips: Schema.Attribute.Component<"dashboard.chat-chip", true>;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
-      Schema.Attribute.Private;
-    helpBanner: Schema.Attribute.Component<"dashboard.help-banner", false>;
-    locale: Schema.Attribute.String;
-    localizations: Schema.Attribute.Relation<
-      "oneToMany",
-      "api::dashboard-promo.dashboard-promo"
-    >;
-    publishedAt: Schema.Attribute.DateTime;
-    trendingQuestions: Schema.Attribute.Component<
-      "dashboard.trending-question",
-      true
-    >;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
-      Schema.Attribute.Private;
-  };
-}
-
 export interface ApiPricingPricing extends Struct.SingleTypeSchema {
   collectionName: "pricings";
   info: {
@@ -1165,6 +1166,14 @@ export interface ApiPricingPricing extends Struct.SingleTypeSchema {
       "api::pricing.pricing"
     > &
       Schema.Attribute.Private;
+    notaryConfirmationFeeAed: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<25>;
     publishedAt: Schema.Attribute.DateTime;
     translationRatePerPageAed: Schema.Attribute.Integer &
       Schema.Attribute.Required &
@@ -1175,14 +1184,6 @@ export interface ApiPricingPricing extends Struct.SingleTypeSchema {
         number
       > &
       Schema.Attribute.DefaultTo<50>;
-    notaryConfirmationFeeAed: Schema.Attribute.Integer &
-      Schema.Attribute.SetMinMax<
-        {
-          min: 0;
-        },
-        number
-      > &
-      Schema.Attribute.DefaultTo<25>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private;
@@ -1211,7 +1212,7 @@ export interface ApiServicePricingServicePricing
     createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private;
     currency: Schema.Attribute.Enumeration<["AED", "USD", "EUR", "GBP"]> &
-      Schema.Attribute.DefaultTo<"AUD">;
+      Schema.Attribute.DefaultTo<"AED">;
     description: Schema.Attribute.RichText &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
