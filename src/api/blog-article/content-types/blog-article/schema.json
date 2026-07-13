@@ -72,7 +72,7 @@
       "repeatable": true,
       "component": "shared.tag"
     },
-    "publishedAt": {
+    "displayDate": {
       "type": "date"
     }
   }

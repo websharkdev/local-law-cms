@@ -23,12 +23,14 @@
     },
     "date": {
       "type": "date",
-      "required": true
+      "required": true,
+      "pluginOptions": { "i18n": { "localized": false } }
     },
     "isRecurringYearly": {
       "type": "boolean",
       "default": false,
-      "required": true
+      "required": true,
+      "pluginOptions": { "i18n": { "localized": false } }
     }
   }
 }

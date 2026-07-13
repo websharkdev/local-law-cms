@@ -21,7 +21,7 @@
     "customerEmail": {
       "type": "email"
     },
-    "status": {
+    "requestStatus": {
       "type": "enumeration",
       "enum": ["pending", "inProgress", "completed", "rejected", "cancelled"],
       "default": "pending",

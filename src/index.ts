@@ -38,7 +38,7 @@ async function ensureRevalidateWebhook(strapi: Core.Strapi) {
 
   const desired = {
     name: REVALIDATE_WEBHOOK_NAME,
-    url: `${baseUrl}/api/strapi/revalidate`,
+    url: `${baseUrl.replace(/\/$/, '')}/api/strapi/revalidate`,
     headers: { 'x-strapi-signature': secret },
     events: REVALIDATE_EVENTS,
   };
@@ -70,11 +70,75 @@ async function ensureRevalidateWebhook(strapi: Core.Strapi) {
   }
 }
 
+/**
+ * Content the Next.js app reads. Mutations stay closed on the Public role;
+ * writes go through API tokens or the admin UI.
+ */
+const PUBLIC_READ_PERMISSIONS: Record<string, string[]> = {
+  lawyer: ['find', 'findOne'],
+  'legal-category': ['find', 'findOne'],
+  'notary-service': ['find', 'findOne'],
+  'notary-config': ['find'],
+  holiday: ['find', 'findOne'],
+  pricing: ['find'],
+  'site-settings': ['find'],
+  'dashboard-promo': ['find'],
+  'document-template': ['find', 'findOne'],
+  page: ['find', 'findOne'],
+  menu: ['find', 'findOne'],
+  faq: ['find', 'findOne'],
+  testimonial: ['find', 'findOne'],
+  'blog-article': ['find', 'findOne'],
+  'service-pricing': ['find', 'findOne'],
+};
+
+async function ensurePublicReadPermissions(strapi: Core.Strapi) {
+  const publicRole = await strapi.db.query('plugin::users-permissions.role').findOne({
+    where: { type: 'public' },
+  });
+
+  if (!publicRole) {
+    strapi.log.warn('permissions: Public role not found, skipping content read setup');
+    return;
+  }
+
+  const existing: Array<{ action: string }> = await strapi.db
+    .query('plugin::users-permissions.permission')
+    .findMany({ where: { role: publicRole.id } });
+  const existingActions = new Set(existing.map((permission) => permission.action));
+
+  const toCreate: Array<{ action: string; role: number }> = [];
+
+  for (const [uid, actions] of Object.entries(PUBLIC_READ_PERMISSIONS)) {
+    for (const action of actions) {
+      const fullAction = `api::${uid}.${uid}.${action}`;
+      if (!existingActions.has(fullAction)) {
+        toCreate.push({ action: fullAction, role: publicRole.id });
+      }
+    }
+  }
+
+  if (toCreate.length === 0) {
+    return;
+  }
+
+  await Promise.all(
+    toCreate.map((data) =>
+      strapi.db.query('plugin::users-permissions.permission').create({ data }),
+    ),
+  );
+
+  strapi.log.info(
+    `permissions: granted Public read on ${toCreate.length} content action(s) for local-law`,
+  );
+}
+
 export default {
   register() {},
 
   async bootstrap({ strapi }: { strapi: Core.Strapi }) {
     await ensureLocales(strapi);
+    await ensurePublicReadPermissions(strapi);
     await ensureRevalidateWebhook(strapi);
   },
 };
