@@ -222,4 +222,6 @@
 
 Webhook создаётся автоматически при старте (`src/index.ts`), если заданы `LOCAL_LAW_URL` и `STRAPI_WEBHOOK_SECRET`.
 
+Public role получает `find`/`findOne` на контентные API при bootstrap (мутации закрыты). Для записи используйте API Token.
+
 **Проверка:** после Publish в Strapi данные на сайте обновляются без редеплоя.

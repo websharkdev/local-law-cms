@@ -25,7 +25,9 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Middlewar
     {
       name: 'strapi::cors',
       config: {
-        origin: [env('LOCAL_LAW_URL', 'http://localhost:3000')],
+        origin: [
+          env('LOCAL_LAW_URL', 'http://localhost:3000').replace(/\/$/, ''),
+        ],
       },
     },
     'strapi::poweredBy',

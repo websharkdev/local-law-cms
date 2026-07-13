@@ -114,43 +114,6 @@ export interface AdminApiTokenPermission extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface AdminAuditLog extends Struct.CollectionTypeSchema {
-  collectionName: "strapi_audit_logs";
-  info: {
-    displayName: "Audit Log";
-    pluralName: "audit-logs";
-    singularName: "audit-log";
-  };
-  options: {
-    draftAndPublish: false;
-    timestamps: false;
-  };
-  pluginOptions: {
-    "content-manager": {
-      visible: false;
-    };
-    "content-type-builder": {
-      visible: false;
-    };
-  };
-  attributes: {
-    action: Schema.Attribute.String & Schema.Attribute.Required;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
-      Schema.Attribute.Private;
-    date: Schema.Attribute.DateTime & Schema.Attribute.Required;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<"oneToMany", "admin::audit-log"> &
-      Schema.Attribute.Private;
-    payload: Schema.Attribute.JSON;
-    publishedAt: Schema.Attribute.DateTime;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
-      Schema.Attribute.Private;
-    user: Schema.Attribute.Relation<"oneToOne", "admin::user">;
-  };
-}
-
 export interface AdminPermission extends Struct.CollectionTypeSchema {
   collectionName: "admin_permissions";
   info: {
@@ -511,6 +474,7 @@ export interface ApiBlogArticleBlogArticle extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private;
+    displayDate: Schema.Attribute.Date;
     featuredImage: Schema.Attribute.Media<"images">;
     locale: Schema.Attribute.String;
     localizations: Schema.Attribute.Relation<
@@ -533,6 +497,45 @@ export interface ApiBlogArticleBlogArticle extends Struct.CollectionTypeSchema {
           localized: true;
         };
       }>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiDashboardPromoDashboardPromo
+  extends Struct.SingleTypeSchema {
+  collectionName: "dashboard_promos";
+  info: {
+    description: "Dashboard promotional content \u2014 AI chat chips, help banner, trending questions";
+    displayName: "Dashboard Promo";
+    pluralName: "dashboard-promos";
+    singularName: "dashboard-promo";
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    chatChips: Schema.Attribute.Component<"dashboard.chat-chip", true>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private;
+    helpBanner: Schema.Attribute.Component<"dashboard.help-banner", false>;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      "oneToMany",
+      "api::dashboard-promo.dashboard-promo"
+    >;
+    publishedAt: Schema.Attribute.DateTime;
+    trendingQuestions: Schema.Attribute.Component<
+      "dashboard.trending-question",
+      true
+    >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private;
@@ -711,9 +714,20 @@ export interface ApiHolidayHoliday extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private;
-    date: Schema.Attribute.Date & Schema.Attribute.Required;
+    date: Schema.Attribute.Date &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }>;
     isRecurringYearly: Schema.Attribute.Boolean &
       Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }> &
       Schema.Attribute.DefaultTo<false>;
     locale: Schema.Attribute.String;
     localizations: Schema.Attribute.Relation<
@@ -751,15 +765,30 @@ export interface ApiLawyerLawyer extends Struct.CollectionTypeSchema {
     };
   };
   attributes: {
-    about: Schema.Attribute.RichText;
+    about: Schema.Attribute.RichText &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     active: Schema.Attribute.Boolean &
       Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }> &
       Schema.Attribute.DefaultTo<true>;
     blogArticles: Schema.Attribute.Relation<
       "oneToMany",
       "api::blog-article.blog-article"
     >;
     casesCount: Schema.Attribute.Integer &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }> &
       Schema.Attribute.SetMinMax<
         {
           min: 0;
@@ -770,8 +799,18 @@ export interface ApiLawyerLawyer extends Struct.CollectionTypeSchema {
     consultationOptions: Schema.Attribute.Component<
       "lawyer.consultation-option",
       true
-    >;
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     consultationPriceAed: Schema.Attribute.Integer &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }> &
       Schema.Attribute.SetMinMax<
         {
           min: 0;
@@ -779,12 +818,27 @@ export interface ApiLawyerLawyer extends Struct.CollectionTypeSchema {
         number
       > &
       Schema.Attribute.DefaultTo<0>;
-    contactEmail: Schema.Attribute.Email;
+    contactEmail: Schema.Attribute.Email &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private;
-    education: Schema.Attribute.Component<"lawyer.education-item", true>;
+    education: Schema.Attribute.Component<"lawyer.education-item", true> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     experienceYears: Schema.Attribute.Integer &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }> &
       Schema.Attribute.SetMinMax<
         {
           min: 0;
@@ -792,24 +846,94 @@ export interface ApiLawyerLawyer extends Struct.CollectionTypeSchema {
         number
       > &
       Schema.Attribute.DefaultTo<0>;
-    firmName: Schema.Attribute.String;
-    image: Schema.Attribute.Media<"images">;
-    isTopLawyer: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
-    language: Schema.Attribute.String;
+    firmName: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    image: Schema.Attribute.Media<"images"> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }>;
+    isTopLawyer: Schema.Attribute.Boolean &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }> &
+      Schema.Attribute.DefaultTo<false>;
+    language: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     lawyerId: Schema.Attribute.String &
       Schema.Attribute.Required &
-      Schema.Attribute.Unique;
-    linkedUserEmail: Schema.Attribute.Email;
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }>;
+    linkedUserEmail: Schema.Attribute.Email &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }>;
     locale: Schema.Attribute.String;
     localizations: Schema.Attribute.Relation<"oneToMany", "api::lawyer.lawyer">;
-    location: Schema.Attribute.String;
-    name: Schema.Attribute.String & Schema.Attribute.Required;
-    notableCases: Schema.Attribute.Component<"lawyer.notable-case", true>;
-    officePhone: Schema.Attribute.String;
-    practiceAreas: Schema.Attribute.Component<"lawyer.practice-area", true>;
+    location: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    name: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    notableCases: Schema.Attribute.Component<"lawyer.notable-case", true> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    officePhone: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }>;
+    practiceAreas: Schema.Attribute.Component<"lawyer.practice-area", true> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     publishedAt: Schema.Attribute.DateTime;
-    servicesOffered: Schema.Attribute.Component<"lawyer.service-offered", true>;
+    servicesOffered: Schema.Attribute.Component<
+      "lawyer.service-offered",
+      true
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     slotDurationMin: Schema.Attribute.Integer &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }> &
       Schema.Attribute.SetMinMax<
         {
           min: 15;
@@ -817,14 +941,39 @@ export interface ApiLawyerLawyer extends Struct.CollectionTypeSchema {
         number
       > &
       Schema.Attribute.DefaultTo<60>;
-    specializations: Schema.Attribute.Component<"shared.tag", true>;
-    timeOff: Schema.Attribute.Component<"schedule.time-off", true>;
-    title: Schema.Attribute.String;
+    specializations: Schema.Attribute.Component<"shared.tag", true> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    timeOff: Schema.Attribute.Component<"schedule.time-off", true> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }>;
+    title: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private;
-    weeklyHours: Schema.Attribute.Component<"schedule.working-day", true>;
-    whatsapp: Schema.Attribute.String;
+    weeklyHours: Schema.Attribute.Component<"schedule.working-day", true> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }>;
+    whatsapp: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }>;
   };
 }
 
@@ -848,6 +997,11 @@ export interface ApiLegalCategoryLegalCategory
   attributes: {
     active: Schema.Attribute.Boolean &
       Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }> &
       Schema.Attribute.DefaultTo<true>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
@@ -857,9 +1011,21 @@ export interface ApiLegalCategoryLegalCategory
       "oneToMany",
       "api::legal-category.legal-category"
     >;
-    order: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    order: Schema.Attribute.Integer &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }> &
+      Schema.Attribute.DefaultTo<0>;
     publishedAt: Schema.Attribute.DateTime;
-    slug: Schema.Attribute.UID & Schema.Attribute.Required;
+    slug: Schema.Attribute.UID &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }>;
     title: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.SetPluginOptions<{
@@ -867,40 +1033,6 @@ export interface ApiLegalCategoryLegalCategory
           localized: true;
         };
       }>;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
-      Schema.Attribute.Private;
-  };
-}
-
-export interface ApiLegalRequestMirrorLegalRequestMirror
-  extends Struct.CollectionTypeSchema {
-  collectionName: "legal_request_mirrors";
-  info: {
-    description: "Virtual content type that proxies to local-law API for business data";
-    displayName: "Legal Request Mirror";
-    pluralName: "legal-request-mirrors";
-    singularName: "legal-request-mirror";
-  };
-  options: {
-    draftAndPublish: false;
-  };
-  pluginOptions: {
-    i18n: {
-      localized: true;
-    };
-  };
-  attributes: {
-    _virtual: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
-      Schema.Attribute.Private;
-    locale: Schema.Attribute.String;
-    localizations: Schema.Attribute.Relation<
-      "oneToMany",
-      "api::legal-request-mirror.legal-request-mirror"
-    >;
-    publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private;
@@ -1008,6 +1140,11 @@ export interface ApiNotaryServiceNotaryService
   attributes: {
     active: Schema.Attribute.Boolean &
       Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }> &
       Schema.Attribute.DefaultTo<true>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
@@ -1023,20 +1160,37 @@ export interface ApiNotaryServiceNotaryService
         "documentAttestation",
         "powerOfAttorney",
         "contractNotarization",
-        "authentification",
+        "authentication",
         "affidavit",
         "other",
       ]
     > &
       Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }> &
       Schema.Attribute.DefaultTo<"other">;
     locale: Schema.Attribute.String;
     localizations: Schema.Attribute.Relation<
       "oneToMany",
       "api::notary-service.notary-service"
     >;
-    order: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    order: Schema.Attribute.Integer &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }> &
+      Schema.Attribute.DefaultTo<0>;
     priceAed: Schema.Attribute.Integer &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }> &
       Schema.Attribute.SetMinMax<
         {
           min: 0;
@@ -1044,7 +1198,13 @@ export interface ApiNotaryServiceNotaryService
         number
       >;
     publishedAt: Schema.Attribute.DateTime;
-    slug: Schema.Attribute.UID & Schema.Attribute.Required;
+    slug: Schema.Attribute.UID &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }>;
     title: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.SetPluginOptions<{
@@ -1103,44 +1263,6 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface ApiDashboardPromoDashboardPromo extends Struct.SingleTypeSchema {
-  collectionName: "dashboard_promos";
-  info: {
-    description: "Dashboard promotional content \u2014 AI chat chips, help banner, trending questions";
-    displayName: "Dashboard Promo";
-    pluralName: "dashboard-promos";
-    singularName: "dashboard-promo";
-  };
-  options: {
-    draftAndPublish: false;
-  };
-  pluginOptions: {
-    i18n: {
-      localized: true;
-    };
-  };
-  attributes: {
-    chatChips: Schema.Attribute.Component<"dashboard.chat-chip", true>;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
-      Schema.Attribute.Private;
-    helpBanner: Schema.Attribute.Component<"dashboard.help-banner", false>;
-    locale: Schema.Attribute.String;
-    localizations: Schema.Attribute.Relation<
-      "oneToMany",
-      "api::dashboard-promo.dashboard-promo"
-    >;
-    publishedAt: Schema.Attribute.DateTime;
-    trendingQuestions: Schema.Attribute.Component<
-      "dashboard.trending-question",
-      true
-    >;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
-      Schema.Attribute.Private;
-  };
-}
-
 export interface ApiPricingPricing extends Struct.SingleTypeSchema {
   collectionName: "pricings";
   info: {
@@ -1165,6 +1287,14 @@ export interface ApiPricingPricing extends Struct.SingleTypeSchema {
       "api::pricing.pricing"
     > &
       Schema.Attribute.Private;
+    notaryConfirmationFeeAed: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<25>;
     publishedAt: Schema.Attribute.DateTime;
     translationRatePerPageAed: Schema.Attribute.Integer &
       Schema.Attribute.Required &
@@ -1175,14 +1305,6 @@ export interface ApiPricingPricing extends Struct.SingleTypeSchema {
         number
       > &
       Schema.Attribute.DefaultTo<50>;
-    notaryConfirmationFeeAed: Schema.Attribute.Integer &
-      Schema.Attribute.SetMinMax<
-        {
-          min: 0;
-        },
-        number
-      > &
-      Schema.Attribute.DefaultTo<25>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private;
@@ -1211,7 +1333,7 @@ export interface ApiServicePricingServicePricing
     createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private;
     currency: Schema.Attribute.Enumeration<["AED", "USD", "EUR", "GBP"]> &
-      Schema.Attribute.DefaultTo<"AUD">;
+      Schema.Attribute.DefaultTo<"AED">;
     description: Schema.Attribute.RichText &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
@@ -1394,7 +1516,7 @@ export interface ApiTranslationRequestTranslationRequest
       Schema.Attribute.DefaultTo<"pending">;
     publishedAt: Schema.Attribute.DateTime;
     ratePerPageAed: Schema.Attribute.Integer & Schema.Attribute.Required;
-    status: Schema.Attribute.Enumeration<
+    requestStatus: Schema.Attribute.Enumeration<
       ["pending", "inProgress", "completed", "rejected", "cancelled"]
     > &
       Schema.Attribute.Required &
@@ -1913,7 +2035,6 @@ declare module "@strapi/strapi" {
     export interface ContentTypeSchemas {
       "admin::api-token": AdminApiToken;
       "admin::api-token-permission": AdminApiTokenPermission;
-      "admin::audit-log": AdminAuditLog;
       "admin::permission": AdminPermission;
       "admin::role": AdminRole;
       "admin::session": AdminSession;
@@ -1927,7 +2048,6 @@ declare module "@strapi/strapi" {
       "api::holiday.holiday": ApiHolidayHoliday;
       "api::lawyer.lawyer": ApiLawyerLawyer;
       "api::legal-category.legal-category": ApiLegalCategoryLegalCategory;
-      "api::legal-request-mirror.legal-request-mirror": ApiLegalRequestMirrorLegalRequestMirror;
       "api::menu.menu": ApiMenuMenu;
       "api::notary-config.notary-config": ApiNotaryConfigNotaryConfig;
       "api::notary-service.notary-service": ApiNotaryServiceNotaryService;

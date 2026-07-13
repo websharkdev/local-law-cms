@@ -18,7 +18,8 @@
   "attributes": {
     "slug": {
       "type": "uid",
-      "required": true
+      "required": true,
+      "pluginOptions": { "i18n": { "localized": false } }
     },
     "title": {
       "type": "string",
@@ -35,25 +36,30 @@
         "documentAttestation",
         "powerOfAttorney",
         "contractNotarization",
-        "authentification",
+        "authentication",
         "affidavit",
         "other"
       ],
       "default": "other",
-      "required": true
+      "required": true,
+      "pluginOptions": { "i18n": { "localized": false } }
     },
     "priceAed": {
       "type": "integer",
-      "min": 0
+      "min": 0,
+      "pluginOptions": { "i18n": { "localized": false } }
     },
     "active": {
       "type": "boolean",
       "default": true,
-      "required": true
+      "required": true,
+      "pluginOptions": { "i18n": { "localized": false } }
     },
     "order": {
       "type": "integer",
-      "default": 0
+      "default": 0,
+      "required": true,
+      "pluginOptions": { "i18n": { "localized": false } }
     }
   }
 }
