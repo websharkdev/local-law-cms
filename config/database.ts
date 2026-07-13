@@ -41,7 +41,19 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Database 
         },
         schema: env('DATABASE_SCHEMA', 'public'),
       },
-      pool: { min: env.int('DATABASE_POOL_MIN', 2), max: env.int('DATABASE_POOL_MAX', 10) },
+      pool: {
+        min: env.int('DATABASE_POOL_MIN', 2),
+        max: env.int('DATABASE_POOL_MAX', 10),
+        // Core builds a few raw queries without a schema prefix; the Neon pooler
+        // rejects search_path as a startup parameter, so set it per connection.
+        afterCreate: (
+          conn: { query: (sql: string, cb: (err: Error | null) => void) => void },
+          done: (err: Error | null, conn: unknown) => void,
+        ) => {
+          const schema = env('DATABASE_SCHEMA', 'public');
+          conn.query(`SET search_path TO "${schema}", public`, (err) => done(err, conn));
+        },
+      },
     },
     sqlite: {
       connection: {
