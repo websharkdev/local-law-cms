@@ -23,14 +23,51 @@
     "title": {
       "type": "string",
       "required": true,
-      "pluginOptions": { "i18n": { "localized": true } }
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
     },
     "description": {
       "type": "text",
-      "pluginOptions": { "i18n": { "localized": true } }
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
     },
     "category": {
-      "type": "string"
+      "type": "enumeration",
+      "enum": [
+        "self-service",
+        "notary-required"
+      ],
+      "default": "self-service",
+      "required": true
+    },
+    "section": {
+      "type": "enumeration",
+      "enum": [
+        "personal",
+        "corporate"
+      ],
+      "default": "personal",
+      "required": true
+    },
+    "apiType": {
+      "type": "enumeration",
+      "enum": [
+        "employment_contract",
+        "nda",
+        "service_agreement",
+        "partnership_agreement",
+        "sales_agreement",
+        "lease_agreement",
+        "power_of_attorney"
+      ],
+      "default": "service_agreement",
+      "required": true
     },
     "iconKey": {
       "type": "enumeration",
@@ -41,7 +78,14 @@
         "scrollText",
         "badgeCheck",
         "copy",
-        "file"
+        "file",
+        "home",
+        "plane",
+        "leaf",
+        "building2",
+        "shield",
+        "lightbulb",
+        "users"
       ],
       "default": "fileText",
       "required": true
@@ -60,7 +104,10 @@
     },
     "generationMethod": {
       "type": "enumeration",
-      "enum": ["POST", "GET"],
+      "enum": [
+        "POST",
+        "GET"
+      ],
       "default": "POST",
       "required": true
     },
@@ -69,7 +116,11 @@
     },
     "promptTemplate": {
       "type": "text",
-      "pluginOptions": { "i18n": { "localized": true } }
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
     },
     "fields": {
       "type": "component",

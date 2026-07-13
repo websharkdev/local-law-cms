@@ -560,7 +560,24 @@ export interface ApiDocumentTemplateDocumentTemplate
     active: Schema.Attribute.Boolean &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<true>;
-    category: Schema.Attribute.String;
+    apiType: Schema.Attribute.Enumeration<
+      [
+        "employment_contract",
+        "nda",
+        "service_agreement",
+        "partnership_agreement",
+        "sales_agreement",
+        "lease_agreement",
+        "power_of_attorney",
+      ]
+    > &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<"service_agreement">;
+    category: Schema.Attribute.Enumeration<
+      ["self-service", "notary-required"]
+    > &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<"self-service">;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private;
@@ -585,6 +602,13 @@ export interface ApiDocumentTemplateDocumentTemplate
         "badgeCheck",
         "copy",
         "file",
+        "home",
+        "plane",
+        "leaf",
+        "building2",
+        "shield",
+        "lightbulb",
+        "users",
       ]
     > &
       Schema.Attribute.Required &
@@ -602,6 +626,9 @@ export interface ApiDocumentTemplateDocumentTemplate
         };
       }>;
     publishedAt: Schema.Attribute.DateTime;
+    section: Schema.Attribute.Enumeration<["personal", "corporate"]> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<"personal">;
     slug: Schema.Attribute.UID & Schema.Attribute.Required;
     title: Schema.Attribute.String &
       Schema.Attribute.Required &
