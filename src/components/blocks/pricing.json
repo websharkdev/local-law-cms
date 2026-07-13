@@ -1,0 +1,47 @@
+{
+  "collectionName": "components_blocks_pricings",
+  "info": {
+    "displayName": "Pricing",
+    "icon": "money-bill-wave"
+  },
+  "options": {},
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "price": {
+      "type": "integer",
+      "required": true
+    },
+    "currency": {
+      "type": "enumeration",
+      "enum": [
+        "AED",
+        "USD",
+        "EUR",
+        "GBP"
+      ],
+      "default": "AED"
+    },
+    "period": {
+      "type": "string",
+      "default": "month"
+    },
+    "features": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.feature-item"
+    },
+    "ctaLabel": {
+      "type": "string"
+    },
+    "ctaHref": {
+      "type": "string"
+    }
+  }
+}

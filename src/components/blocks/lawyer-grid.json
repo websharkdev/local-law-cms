@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_blocks_lawyer_grids",
+  "info": {
+    "displayName": "Lawyer Grid"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "limit": {
+      "type": "integer",
+      "default": 6
+    }
+  }
+}

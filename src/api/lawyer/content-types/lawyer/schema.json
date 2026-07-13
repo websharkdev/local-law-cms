@@ -1,11 +1,11 @@
 {
   "kind": "collectionType",
-  "collectionName": "lawyers",
+  "collectionName": "lawyers_cms",
   "info": {
     "singularName": "lawyer",
     "pluralName": "lawyers",
-    "displayName": "Lawyer",
-    "description": "Lawyer profile, contacts and availability schedule"
+    "displayName": "Lawyer (CMS)",
+    "description": "Marketing profile — kept in sync with Prisma Lawyer table by the read-only bridge (Step 5). Strapi is canonical for displayed image, about copy, notable cases."
   },
   "options": {
     "draftAndPublish": true
@@ -16,22 +16,27 @@
     }
   },
   "attributes": {
+    "lawyerId": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
     "name": {
       "type": "string",
       "required": true
     },
     "title": {
-      "type": "string",
-      "pluginOptions": { "i18n": { "localized": true } }
+      "type": "string"
     },
     "image": {
       "type": "media",
       "multiple": false,
-      "allowedTypes": ["images"]
+      "allowedTypes": [
+        "images"
+      ]
     },
     "location": {
-      "type": "string",
-      "pluginOptions": { "i18n": { "localized": true } }
+      "type": "string"
     },
     "language": {
       "type": "string"
@@ -41,13 +46,11 @@
     },
     "casesCount": {
       "type": "integer",
-      "default": 0,
-      "min": 0
+      "default": 0
     },
     "experienceYears": {
       "type": "integer",
-      "default": 0,
-      "min": 0
+      "default": 0
     },
     "isTopLawyer": {
       "type": "boolean",
@@ -56,20 +59,12 @@
     "officePhone": {
       "type": "string"
     },
-    "contactEmail": {
-      "type": "email"
-    },
-    "whatsapp": {
-      "type": "string"
-    },
     "consultationPriceAed": {
       "type": "integer",
-      "default": 0,
-      "min": 0
+      "default": 0
     },
     "about": {
-      "type": "richtext",
-      "pluginOptions": { "i18n": { "localized": true } }
+      "type": "richtext"
     },
     "education": {
       "type": "json"
@@ -77,25 +72,20 @@
     "notableCases": {
       "type": "json"
     },
-    "active": {
-      "type": "boolean",
-      "default": true,
-      "required": true
+    "lawyerStatus": {
+      "type": "enumeration",
+      "enum": [
+        "active",
+        "hidden",
+        "draft"
+      ],
+      "default": "active"
     },
-    "slotDurationMin": {
-      "type": "integer",
-      "default": 60,
-      "min": 15
-    },
-    "weeklyHours": {
-      "type": "component",
-      "repeatable": true,
-      "component": "schedule.working-day"
-    },
-    "timeOff": {
-      "type": "component",
-      "repeatable": true,
-      "component": "schedule.time-off"
+    "blogArticles": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::blog-article.blog-article",
+      "mappedBy": "author"
     }
   }
 }

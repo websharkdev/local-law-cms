@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_blocks_feature_lists",
+  "info": {
+    "displayName": "Feature List"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "features": {
+      "type": "component",
+      "component": "shared.feature",
+      "repeatable": true
+    }
+  }
+}

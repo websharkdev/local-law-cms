@@ -1,0 +1,55 @@
+{
+  "kind": "collectionType",
+  "collectionName": "service_pricings",
+  "info": {
+    "singularName": "service-pricing",
+    "pluralName": "service-pricings",
+    "displayName": "Service Pricing",
+    "description": "Price list items per service"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "serviceName": {
+      "type": "string",
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "description": {
+      "type": "richtext",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "priceAed": {
+      "type": "integer",
+      "required": true,
+      "min": 0
+    },
+    "currency": {
+      "type": "enumeration",
+      "enum": ["AED", "USD", "EUR", "GBP"],
+      "default": "AUD"
+    },
+    "duration": {
+      "type": "string"
+    },
+    "features": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.feature"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_shared_tags",
+  "info": {
+    "displayName": "Tag"
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    }
+  }
+}
