@@ -1,0 +1,35 @@
+{
+  "kind": "singleType",
+  "collectionName": "dashboard_promos",
+  "info": {
+    "singularName": "dashboard-promo",
+    "pluralName": "dashboard-promos",
+    "displayName": "Dashboard Promo",
+    "description": "Dashboard promotional content — AI chat chips, help banner, trending questions"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "chatChips": {
+      "type": "component",
+      "repeatable": true,
+      "component": "dashboard.chat-chip"
+    },
+    "helpBanner": {
+      "type": "component",
+      "repeatable": false,
+      "component": "dashboard.help-banner"
+    },
+    "trendingQuestions": {
+      "type": "component",
+      "repeatable": true,
+      "component": "dashboard.trending-question"
+    }
+  }
+}

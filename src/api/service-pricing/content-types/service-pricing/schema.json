@@ -41,7 +41,7 @@
     "currency": {
       "type": "enumeration",
       "enum": ["AED", "USD", "EUR", "GBP"],
-      "default": "AUD"
+      "default": "AED"
     },
     "duration": {
       "type": "string"

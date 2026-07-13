@@ -737,8 +737,8 @@ export interface ApiHolidayHoliday extends Struct.CollectionTypeSchema {
 export interface ApiLawyerLawyer extends Struct.CollectionTypeSchema {
   collectionName: "lawyers_cms";
   info: {
-    description: "Marketing profile \u2014 kept in sync with Prisma Lawyer table by the read-only bridge (Step 5). Strapi is canonical for displayed image, about copy, notable cases.";
-    displayName: "Lawyer (CMS)";
+    description: "Lawyer profile \u2014 canonical source for catalog, profile page and dashboard Top Lawyers. Publish EN + AR. Use active=false to hide from catalog without deleting.";
+    displayName: "Lawyer";
     pluralName: "lawyers";
     singularName: "lawyer";
   };
@@ -752,38 +752,79 @@ export interface ApiLawyerLawyer extends Struct.CollectionTypeSchema {
   };
   attributes: {
     about: Schema.Attribute.RichText;
+    active: Schema.Attribute.Boolean &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<true>;
     blogArticles: Schema.Attribute.Relation<
       "oneToMany",
       "api::blog-article.blog-article"
     >;
-    casesCount: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
-    consultationPriceAed: Schema.Attribute.Integer &
+    casesCount: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
       Schema.Attribute.DefaultTo<0>;
+    consultationOptions: Schema.Attribute.Component<
+      "lawyer.consultation-option",
+      true
+    >;
+    consultationPriceAed: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
+    contactEmail: Schema.Attribute.Email;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private;
-    education: Schema.Attribute.JSON;
-    experienceYears: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    education: Schema.Attribute.Component<"lawyer.education-item", true>;
+    experienceYears: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
+    firmName: Schema.Attribute.String;
     image: Schema.Attribute.Media<"images">;
     isTopLawyer: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     language: Schema.Attribute.String;
     lawyerId: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.Unique;
-    lawyerStatus: Schema.Attribute.Enumeration<["active", "hidden", "draft"]> &
-      Schema.Attribute.DefaultTo<"active">;
+    linkedUserEmail: Schema.Attribute.Email;
     locale: Schema.Attribute.String;
     localizations: Schema.Attribute.Relation<"oneToMany", "api::lawyer.lawyer">;
     location: Schema.Attribute.String;
     name: Schema.Attribute.String & Schema.Attribute.Required;
-    notableCases: Schema.Attribute.JSON;
+    notableCases: Schema.Attribute.Component<"lawyer.notable-case", true>;
     officePhone: Schema.Attribute.String;
+    practiceAreas: Schema.Attribute.Component<"lawyer.practice-area", true>;
     publishedAt: Schema.Attribute.DateTime;
-    specializations: Schema.Attribute.JSON;
+    servicesOffered: Schema.Attribute.Component<"lawyer.service-offered", true>;
+    slotDurationMin: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 15;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<60>;
+    specializations: Schema.Attribute.Component<"shared.tag", true>;
+    timeOff: Schema.Attribute.Component<"schedule.time-off", true>;
     title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private;
+    weeklyHours: Schema.Attribute.Component<"schedule.working-day", true>;
+    whatsapp: Schema.Attribute.String;
   };
 }
 
@@ -1062,6 +1103,44 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiDashboardPromoDashboardPromo extends Struct.SingleTypeSchema {
+  collectionName: "dashboard_promos";
+  info: {
+    description: "Dashboard promotional content \u2014 AI chat chips, help banner, trending questions";
+    displayName: "Dashboard Promo";
+    pluralName: "dashboard-promos";
+    singularName: "dashboard-promo";
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    chatChips: Schema.Attribute.Component<"dashboard.chat-chip", true>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private;
+    helpBanner: Schema.Attribute.Component<"dashboard.help-banner", false>;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      "oneToMany",
+      "api::dashboard-promo.dashboard-promo"
+    >;
+    publishedAt: Schema.Attribute.DateTime;
+    trendingQuestions: Schema.Attribute.Component<
+      "dashboard.trending-question",
+      true
+    >;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiPricingPricing extends Struct.SingleTypeSchema {
   collectionName: "pricings";
   info: {
@@ -1096,6 +1175,14 @@ export interface ApiPricingPricing extends Struct.SingleTypeSchema {
         number
       > &
       Schema.Attribute.DefaultTo<50>;
+    notaryConfirmationFeeAed: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<25>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private;
@@ -1834,6 +1921,7 @@ declare module "@strapi/strapi" {
       "admin::transfer-token-permission": AdminTransferTokenPermission;
       "admin::user": AdminUser;
       "api::blog-article.blog-article": ApiBlogArticleBlogArticle;
+      "api::dashboard-promo.dashboard-promo": ApiDashboardPromoDashboardPromo;
       "api::document-template.document-template": ApiDocumentTemplateDocumentTemplate;
       "api::faq.faq": ApiFaqFaq;
       "api::holiday.holiday": ApiHolidayHoliday;

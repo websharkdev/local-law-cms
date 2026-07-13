@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_lawyer_practice_areas",
+  "info": {
+    "displayName": "Practice Area",
+    "icon": "layer",
+    "description": "Area of legal practice shown on the profile"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

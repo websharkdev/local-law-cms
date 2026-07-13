@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_dashboard_chat_chips",
+  "info": {
+    "displayName": "Chat Chip",
+    "icon": "message",
+    "description": "AI chat suggestion chip on the dashboard"
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string",
+      "required": true
+    },
+    "prompt": {
+      "type": "text"
+    }
+  }
+}
