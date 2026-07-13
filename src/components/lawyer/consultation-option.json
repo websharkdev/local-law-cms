@@ -1,0 +1,20 @@
+{
+  "collectionName": "components_lawyer_consultation_options",
+  "info": {
+    "displayName": "Consultation Option",
+    "icon": "calendar",
+    "description": "How a consultation can be delivered"
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string",
+      "required": true
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": ["inPerson", "video", "phone"],
+      "default": "inPerson"
+    }
+  }
+}

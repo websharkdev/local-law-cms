@@ -1,0 +1,24 @@
+{
+  "collectionName": "components_dashboard_help_banners",
+  "info": {
+    "displayName": "Help Banner",
+    "icon": "information",
+    "description": "Dashboard help / CTA banner"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "ctaLabel": {
+      "type": "string"
+    },
+    "ctaHref": {
+      "type": "string"
+    }
+  }
+}

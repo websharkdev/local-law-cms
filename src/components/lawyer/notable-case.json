@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_lawyer_notable_cases",
+  "info": {
+    "displayName": "Notable Case",
+    "icon": "briefcase",
+    "description": "Landmark case or achievement"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "year": {
+      "type": "string"
+    }
+  }
+}

@@ -4,8 +4,8 @@
   "info": {
     "singularName": "lawyer",
     "pluralName": "lawyers",
-    "displayName": "Lawyer (CMS)",
-    "description": "Marketing profile — kept in sync with Prisma Lawyer table by the read-only bridge (Step 5). Strapi is canonical for displayed image, about copy, notable cases."
+    "displayName": "Lawyer",
+    "description": "Lawyer profile — canonical source for catalog, profile page and dashboard Top Lawyers. Publish EN + AR. Use active=false to hide from catalog without deleting."
   },
   "options": {
     "draftAndPublish": true
@@ -21,6 +21,9 @@
       "required": true,
       "unique": true
     },
+    "linkedUserEmail": {
+      "type": "email"
+    },
     "name": {
       "type": "string",
       "required": true
@@ -28,12 +31,13 @@
     "title": {
       "type": "string"
     },
+    "firmName": {
+      "type": "string"
+    },
     "image": {
       "type": "media",
       "multiple": false,
-      "allowedTypes": [
-        "images"
-      ]
+      "allowedTypes": ["images"]
     },
     "location": {
       "type": "string"
@@ -42,44 +46,85 @@
       "type": "string"
     },
     "specializations": {
-      "type": "json"
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.tag"
     },
     "casesCount": {
       "type": "integer",
-      "default": 0
+      "default": 0,
+      "min": 0
     },
     "experienceYears": {
       "type": "integer",
-      "default": 0
+      "default": 0,
+      "min": 0
     },
     "isTopLawyer": {
       "type": "boolean",
       "default": false
     },
+    "active": {
+      "type": "boolean",
+      "default": true,
+      "required": true
+    },
     "officePhone": {
+      "type": "string"
+    },
+    "contactEmail": {
+      "type": "email"
+    },
+    "whatsapp": {
       "type": "string"
     },
     "consultationPriceAed": {
       "type": "integer",
-      "default": 0
+      "default": 0,
+      "min": 0
     },
     "about": {
       "type": "richtext"
     },
     "education": {
-      "type": "json"
+      "type": "component",
+      "repeatable": true,
+      "component": "lawyer.education-item"
     },
     "notableCases": {
-      "type": "json"
+      "type": "component",
+      "repeatable": true,
+      "component": "lawyer.notable-case"
     },
-    "lawyerStatus": {
-      "type": "enumeration",
-      "enum": [
-        "active",
-        "hidden",
-        "draft"
-      ],
-      "default": "active"
+    "practiceAreas": {
+      "type": "component",
+      "repeatable": true,
+      "component": "lawyer.practice-area"
+    },
+    "servicesOffered": {
+      "type": "component",
+      "repeatable": true,
+      "component": "lawyer.service-offered"
+    },
+    "consultationOptions": {
+      "type": "component",
+      "repeatable": true,
+      "component": "lawyer.consultation-option"
+    },
+    "slotDurationMin": {
+      "type": "integer",
+      "default": 60,
+      "min": 15
+    },
+    "weeklyHours": {
+      "type": "component",
+      "repeatable": true,
+      "component": "schedule.working-day"
+    },
+    "timeOff": {
+      "type": "component",
+      "repeatable": true,
+      "component": "schedule.time-off"
     },
     "blogArticles": {
       "type": "relation",

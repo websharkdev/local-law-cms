@@ -17,6 +17,11 @@
       "default": 50,
       "min": 1
     },
+    "notaryConfirmationFeeAed": {
+      "type": "integer",
+      "default": 25,
+      "min": 0
+    },
     "currency": {
       "type": "string",
       "default": "AED",

@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_dashboard_trending_questions",
+  "info": {
+    "displayName": "Trending Question",
+    "icon": "question",
+    "description": "Promoted question for the AI chat"
+  },
+  "options": {},
+  "attributes": {
+    "text": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

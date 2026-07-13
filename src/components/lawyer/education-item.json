@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_lawyer_education_items",
+  "info": {
+    "displayName": "Education Item",
+    "icon": "graduation-cap",
+    "description": "Degree, certificate or qualification"
+  },
+  "options": {},
+  "attributes": {
+    "degree": {
+      "type": "string",
+      "required": true
+    },
+    "institution": {
+      "type": "string"
+    },
+    "year": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_lawyer_services_offered",
+  "info": {
+    "displayName": "Service Offered",
+    "icon": "check",
+    "description": "Service listed on the lawyer profile"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

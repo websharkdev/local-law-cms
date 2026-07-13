@@ -206,6 +206,46 @@ export interface BlocksTestimonialItem extends Struct.ComponentSchema {
   };
 }
 
+export interface DashboardChatChip extends Struct.ComponentSchema {
+  collectionName: "components_dashboard_chat_chips";
+  info: {
+    description: "AI chat suggestion chip on the dashboard";
+    displayName: "Chat Chip";
+    icon: "message";
+  };
+  attributes: {
+    label: Schema.Attribute.String & Schema.Attribute.Required;
+    prompt: Schema.Attribute.Text;
+  };
+}
+
+export interface DashboardHelpBanner extends Struct.ComponentSchema {
+  collectionName: "components_dashboard_help_banners";
+  info: {
+    description: "Dashboard help / CTA banner";
+    displayName: "Help Banner";
+    icon: "information";
+  };
+  attributes: {
+    ctaHref: Schema.Attribute.String;
+    ctaLabel: Schema.Attribute.String;
+    description: Schema.Attribute.Text;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
+export interface DashboardTrendingQuestion extends Struct.ComponentSchema {
+  collectionName: "components_dashboard_trending_questions";
+  info: {
+    description: "Promoted question for the AI chat";
+    displayName: "Trending Question";
+    icon: "question";
+  };
+  attributes: {
+    text: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
 export interface DocField extends Struct.ComponentSchema {
   collectionName: "components_doc_fields";
   info: {
@@ -239,6 +279,72 @@ export interface DocField extends Struct.ComponentSchema {
     > &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<"text">;
+  };
+}
+
+export interface LawyerConsultationOption extends Struct.ComponentSchema {
+  collectionName: "components_lawyer_consultation_options";
+  info: {
+    description: "How a consultation can be delivered";
+    displayName: "Consultation Option";
+    icon: "calendar";
+  };
+  attributes: {
+    label: Schema.Attribute.String & Schema.Attribute.Required;
+    type: Schema.Attribute.Enumeration<["inPerson", "video", "phone"]> &
+      Schema.Attribute.DefaultTo<"inPerson">;
+  };
+}
+
+export interface LawyerEducationItem extends Struct.ComponentSchema {
+  collectionName: "components_lawyer_education_items";
+  info: {
+    description: "Degree, certificate or qualification";
+    displayName: "Education Item";
+    icon: "graduation-cap";
+  };
+  attributes: {
+    degree: Schema.Attribute.String & Schema.Attribute.Required;
+    institution: Schema.Attribute.String;
+    year: Schema.Attribute.String;
+  };
+}
+
+export interface LawyerNotableCase extends Struct.ComponentSchema {
+  collectionName: "components_lawyer_notable_cases";
+  info: {
+    description: "Landmark case or achievement";
+    displayName: "Notable Case";
+    icon: "briefcase";
+  };
+  attributes: {
+    description: Schema.Attribute.Text;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+    year: Schema.Attribute.String;
+  };
+}
+
+export interface LawyerPracticeArea extends Struct.ComponentSchema {
+  collectionName: "components_lawyer_practice_areas";
+  info: {
+    description: "Area of legal practice shown on the profile";
+    displayName: "Practice Area";
+    icon: "layer";
+  };
+  attributes: {
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
+export interface LawyerServiceOffered extends Struct.ComponentSchema {
+  collectionName: "components_lawyer_services_offered";
+  info: {
+    description: "Service listed on the lawyer profile";
+    displayName: "Service Offered";
+    icon: "check";
+  };
+  attributes: {
+    title: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }
 
@@ -412,7 +518,15 @@ declare module "@strapi/strapi" {
       "blocks.rich-text": BlocksRichText;
       "blocks.testimonial": BlocksTestimonial;
       "blocks.testimonial-item": BlocksTestimonialItem;
+      "dashboard.chat-chip": DashboardChatChip;
+      "dashboard.help-banner": DashboardHelpBanner;
+      "dashboard.trending-question": DashboardTrendingQuestion;
       "doc.field": DocField;
+      "lawyer.consultation-option": LawyerConsultationOption;
+      "lawyer.education-item": LawyerEducationItem;
+      "lawyer.notable-case": LawyerNotableCase;
+      "lawyer.practice-area": LawyerPracticeArea;
+      "lawyer.service-offered": LawyerServiceOffered;
       "req.file": ReqFile;
       "schedule.blackout-date": ScheduleBlackoutDate;
       "schedule.time-off": ScheduleTimeOff;
