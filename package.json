@@ -15,7 +15,13 @@
     "upgrade": "npx @strapi/upgrade latest",
     "upgrade:dry": "npx @strapi/upgrade latest --dry"
   },
+  "overrides": {
+    "@codemirror/state": "6.7.1",
+    "@codemirror/view": "6.43.6"
+  },
   "dependencies": {
+    "@codemirror/state": "6.7.1",
+    "@codemirror/view": "6.43.6",
     "@strapi/plugin-cloud": "5.50.1",
     "@strapi/plugin-users-permissions": "5.50.1",
     "@strapi/provider-upload-aws-s3": "^5.50.1",
