@@ -30,6 +30,8 @@ const TYPE_ALIASES = {
   'custom-notary': 'custom-notary-requests',
 };
 
+const DEFAULT_TIMEOUT_MS = 15000;
+
 class LocalLawConfigError extends Error {
   constructor(message) {
     super(message);
@@ -47,6 +49,24 @@ class LocalLawApiError extends Error {
   }
 }
 
+function normalizeBaseUrl(raw) {
+  let baseUrl = String(raw || '').trim().replace(/\/$/, '');
+
+  // Node fetch often resolves "localhost" to ::1 while Next listens on IPv4 only.
+  if (/^https?:\/\/localhost(?=[:/]|$)/i.test(baseUrl)) {
+    baseUrl = baseUrl.replace(/^(https?:\/\/)localhost/i, '$1127.0.0.1');
+  }
+
+  return baseUrl;
+}
+
+function describeFetchFailure(error) {
+  const cause = error?.cause || error;
+  const code = cause?.code || error?.code;
+  const detail = cause?.message || error?.message || 'unknown network error';
+  return code ? `${code}: ${detail}` : detail;
+}
+
 module.exports = ({ strapi }) => ({
   resourcePaths: RESOURCE_PATHS,
   allowedStatuses: ALLOWED_STATUSES,
@@ -60,8 +80,12 @@ module.exports = ({ strapi }) => ({
   },
 
   getConfig() {
-    const baseUrl = (process.env.LOCAL_LAW_URL || '').replace(/\/$/, '');
-    const token = process.env.LOCAL_LAW_ADMIN_API_TOKEN;
+    const pluginConfig = strapi.config.get('plugin::operations') || {};
+    const baseUrl = normalizeBaseUrl(
+      pluginConfig.localLawUrl || process.env.LOCAL_LAW_URL,
+    );
+    const token =
+      pluginConfig.adminApiToken || process.env.LOCAL_LAW_ADMIN_API_TOKEN;
 
     if (!baseUrl || !token) {
       throw new LocalLawConfigError(
@@ -102,11 +126,14 @@ module.exports = ({ strapi }) => ({
   async request(path, { method = 'GET', body, expectJson = true } = {}) {
     const { baseUrl, token } = this.getConfig();
     const url = `${baseUrl}${path}`;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), DEFAULT_TIMEOUT_MS);
 
     let response;
     try {
       response = await fetch(url, {
         method,
+        signal: controller.signal,
         headers: {
           Authorization: `Bearer ${token}`,
           Accept: expectJson ? 'application/json' : '*/*',
@@ -115,8 +142,22 @@ module.exports = ({ strapi }) => ({
         body: body ? JSON.stringify(body) : undefined,
       });
     } catch (error) {
-      strapi.log.error(`operations: local-law request failed ${method} ${path}`, error);
-      throw new LocalLawApiError(`Failed to reach local-law at ${path}`, 502);
+      const reason = describeFetchFailure(error);
+      strapi.log.error(
+        `operations: local-law request failed ${method} ${url} (${reason})`,
+        error,
+      );
+
+      const aborted = error?.name === 'AbortError';
+      throw new LocalLawApiError(
+        aborted
+          ? `Timed out reaching local-law at ${url}. Is the Next.js app running and reachable from Strapi?`
+          : `Failed to reach local-law at ${url} (${reason}). Check LOCAL_LAW_URL from the Strapi server host (not the browser), and that Next exposes /api/admin/ops/*.`,
+        502,
+        { url, reason },
+      );
+    } finally {
+      clearTimeout(timeout);
     }
 
     if (!response.ok) {
@@ -128,10 +169,18 @@ module.exports = ({ strapi }) => ({
       }
 
       strapi.log.warn(
-        `operations: local-law responded ${response.status} for ${method} ${path}`,
+        `operations: local-law responded ${response.status} for ${method} ${url}`,
       );
+
+      const hint =
+        response.status === 401 || response.status === 403
+          ? ' Check LOCAL_LAW_ADMIN_API_TOKEN matches the token expected by Next.'
+          : response.status === 404
+            ? ' Next route missing — implement the local-law admin ops API (see docs/OPERATIONS.md).'
+            : '';
+
       throw new LocalLawApiError(
-        `local-law returned ${response.status} for ${path}`,
+        `local-law returned ${response.status} for ${method} ${url}.${hint}`,
         response.status >= 400 && response.status < 500 ? response.status : 502,
         details,
       );
@@ -202,5 +251,47 @@ module.exports = ({ strapi }) => ({
       contentType,
       contentDisposition,
     };
+  },
+
+  async health() {
+    let config;
+    try {
+      config = this.getConfig();
+    } catch (error) {
+      return {
+        ok: false,
+        configured: false,
+        message: error.message,
+      };
+    }
+
+    try {
+      // Prefer documents as the smoke endpoint; any 401/404 still proves connectivity.
+      const response = await fetch(`${config.baseUrl}/api/admin/ops/documents`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${config.token}`,
+          Accept: 'application/json',
+        },
+        signal: AbortSignal.timeout(DEFAULT_TIMEOUT_MS),
+      });
+
+      return {
+        ok: response.ok,
+        configured: true,
+        baseUrl: config.baseUrl,
+        status: response.status,
+        message: response.ok
+          ? 'local-law admin ops API reachable'
+          : `local-law responded ${response.status} for /api/admin/ops/documents`,
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        configured: true,
+        baseUrl: config.baseUrl,
+        message: describeFetchFailure(error),
+      };
+    }
   },
 });

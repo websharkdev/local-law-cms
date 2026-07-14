@@ -26,6 +26,10 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Plugin =>
   operations: {
     enabled: true,
     resolve: './src/plugins/operations',
+    config: {
+      localLawUrl: env('LOCAL_LAW_URL'),
+      adminApiToken: env('LOCAL_LAW_ADMIN_API_TOKEN'),
+    },
   },
   'users-permissions': {
     config: {

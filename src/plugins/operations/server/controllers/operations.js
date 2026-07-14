@@ -14,6 +14,16 @@ function sendError(ctx, error) {
 }
 
 module.exports = {
+  async health(ctx) {
+    try {
+      const data = await strapi.plugin('operations').service('local-law').health();
+      ctx.status = data.ok ? 200 : data.configured ? 502 : 503;
+      ctx.body = { data };
+    } catch (error) {
+      sendError(ctx, error);
+    }
+  },
+
   async findDocuments(ctx) {
     try {
       const data = await strapi.plugin('operations').service('local-law').list('documents');

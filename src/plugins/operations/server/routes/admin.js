@@ -3,6 +3,14 @@
 module.exports = [
   {
     method: 'GET',
+    path: '/health',
+    handler: 'operations.health',
+    config: {
+      policies: [],
+    },
+  },
+  {
+    method: 'GET',
     path: '/documents',
     handler: 'operations.findDocuments',
     config: {

@@ -166,8 +166,11 @@ const App = () => {
                       <Typography textColor="danger700">{error}</Typography>
                       <Box paddingTop={2}>
                         <Typography textColor="danger600">
-                          Configure LOCAL_LAW_URL and LOCAL_LAW_ADMIN_API_TOKEN,
-                          then ensure the local-law admin ops API is available.
+                          {/must be configured/i.test(error)
+                            ? 'Set LOCAL_LAW_URL and LOCAL_LAW_ADMIN_API_TOKEN on the Strapi server, then restart.'
+                            : /404/.test(error)
+                              ? 'Next.js is reachable but this admin ops route is missing. Implement /api/admin/ops/* in local-law (see docs/OPERATIONS.md).'
+                              : 'Strapi could not reach the Next.js admin ops API. LOCAL_LAW_URL must be reachable from the Strapi host (not from your browser). On Railway/production use the public app URL, not localhost.'}
                         </Typography>
                       </Box>
                     </Box>

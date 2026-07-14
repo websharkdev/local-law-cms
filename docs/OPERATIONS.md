@@ -18,8 +18,21 @@ Strapi Admin UI  →  Strapi plugin backend  →  local-law Next.js admin API  �
 
 | Variable | Purpose |
 |---|---|
-| `LOCAL_LAW_URL` | Base URL of the Next.js app (e.g. `http://localhost:3000`) |
+| `LOCAL_LAW_URL` | Base URL of the Next.js app (e.g. `http://127.0.0.1:3000` locally, or the public production URL) |
 | `LOCAL_LAW_ADMIN_API_TOKEN` | Shared bearer token for server-to-server calls |
+
+### Troubleshooting `Failed to reach local-law`
+
+That error means Strapi’s **server process** could not open a TCP connection to Next (or timed out). It is not a browser CORS issue.
+
+Check:
+
+1. `LOCAL_LAW_URL` is set on the **Strapi** host and points to a URL Strapi can reach.
+   - Local Strapi → local Next: `http://127.0.0.1:3000`
+   - Deployed Strapi (Railway/etc.) → **must not** use `localhost`; use the public Next URL
+2. Next.js is running and exposes `/api/admin/ops/*` (see below).
+3. `LOCAL_LAW_ADMIN_API_TOKEN` matches on both sides (wrong token → `401/403`, not “Failed to reach”).
+4. Admin health: `GET /operations/health` (with admin JWT) returns connectivity details.
 
 ## Strapi plugin endpoints (admin)
 
