@@ -4,7 +4,6 @@ import {
   Box,
   Button,
   Flex,
-  JSONInput,
   Modal,
   Typography,
 } from '@strapi/design-system';
@@ -133,10 +132,19 @@ const DetailsModal = ({ item, onClose }) => {
               <Typography variant="sigma" textColor="neutral600">
                 Payload
               </Typography>
-              <JSONInput
-                disabled
-                value={JSON.stringify(payload ?? {}, null, 2)}
-              />
+              {/* Plain <pre>, not JSONInput: JSONInput pulls in CodeMirror,
+                  which currently crashes on duplicate @codemirror/state
+                  instances (strapi/strapi#26951). */}
+              <Box
+                padding={3}
+                background="neutral100"
+                hasRadius
+                style={{ maxHeight: 320, overflow: 'auto' }}
+              >
+                <pre style={{ margin: 0, fontSize: 12, whiteSpace: 'pre-wrap' }}>
+                  {JSON.stringify(payload ?? {}, null, 2)}
+                </pre>
+              </Box>
             </Box>
           </Flex>
         </Modal.Body>

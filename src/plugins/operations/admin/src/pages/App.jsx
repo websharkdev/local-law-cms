@@ -113,12 +113,22 @@ const App = () => {
       link.remove();
       URL.revokeObjectURL(url);
     } catch (err) {
+      let message = err?.response?.data?.error?.message || err?.message;
+
+      // responseType: 'blob' makes axios deliver error bodies as a Blob too,
+      // so the real backend message has to be read out of it manually.
+      if (err?.response?.data instanceof Blob) {
+        try {
+          const text = await err.response.data.text();
+          message = JSON.parse(text)?.error?.message || message;
+        } catch {
+          // not JSON, fall back to whatever message we already have
+        }
+      }
+
       toggleNotification({
         type: 'danger',
-        message:
-          err?.response?.data?.error?.message ||
-          err?.message ||
-          'Failed to download file',
+        message: message || 'Failed to download file',
       });
     }
   };
