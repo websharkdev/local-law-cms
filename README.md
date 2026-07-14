@@ -22,8 +22,25 @@ Strapi v5 CMS для сайта local-law. Управляет контентом
 |---|---|---|
 | `dashboard-promo` | single | AI chips, help banner, trending questions |
 | `document-template` | collection | Шаблоны документов (вне скоупа UI) |
-| `translation-request` | collection | Заявки на перевод (mirror из приложения) |
+| `translation-request` | collection | Legacy CMS collection — **не** source of truth для ops |
 | `page`, `menu`, `faq`, `testimonial`, `blog-article` | various | Маркетинговый CMS |
+
+## Operations (транзакционные заявки)
+
+Админ-раздел **Operations** (`src/plugins/operations`) — custom admin page с табами Documents / Translations / Notary bookings / Custom notary.
+
+- Prisma/PostgreSQL в local-law остаётся source of truth.
+- Strapi Admin ходит только в Strapi backend; backend проксирует в Next admin API.
+- Файлы не дублируются в Strapi uploads; download через secured proxy.
+
+См. контракт и checklist: [`docs/OPERATIONS.md`](docs/OPERATIONS.md).
+
+Нужны env:
+
+```bash
+LOCAL_LAW_URL=http://localhost:3000
+LOCAL_LAW_ADMIN_API_TOKEN=...   # shared bearer с Next LOCAL_LAW_ADMIN_API_TOKEN
+```
 
 Локали i18n: `en` (default) + `ar` (создаётся автоматически при старте, см. `src/index.ts`).
 

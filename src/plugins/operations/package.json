@@ -1,0 +1,12 @@
+{
+  "name": "strapi-plugin-operations",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Operations admin UI that proxies transactional data from local-law (Prisma remains the source of truth).",
+  "strapi": {
+    "name": "operations",
+    "displayName": "Operations",
+    "description": "View and manage documents, translations, and notary requests from local-law",
+    "kind": "plugin"
+  }
+}
