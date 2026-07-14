@@ -148,6 +148,10 @@ module.exports = ({ strapi }) => ({
     if (Array.isArray(payload?.data)) {
       return payload.data;
     }
+    // local-law list endpoints wrap arrays as { data: { items, limit } }.
+    if (Array.isArray(payload?.data?.items)) {
+      return payload.data.items;
+    }
     return payload?.data ?? payload;
   },
 
